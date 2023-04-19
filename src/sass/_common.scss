@@ -1,1 +1,13 @@
 @import '~node_modules/modern-normalize/modern-normalize.css';
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #0f0212;
+}
+img {
+  width: 100px;
+  border-radius: 15px;
+  border: 1px solid palevioletred;
+}
