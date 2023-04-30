@@ -1,48 +1,39 @@
 const showPokemon = pokemon => {
   const body = document.querySelector('.poke__list');
   const image = document.createElement('img');
-  image.src = pokemon;
+  image.src = pokemon.sprites.front_default;
 
   body.appendChild(image);
 };
 
-const pokemonList = [
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/007.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/012.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/013.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/030.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/676.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/293.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/052.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/345.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/072.png',
-  'https://assets.pokemon.com/assets/cms2/img/pokedex/full/064.png',
-];
+const getPokemon1 = () =>
+  fetch('https://pokeapi.co/api/v2/pokemon/1').then(res => res.json());
 
-const getPokemon = async pokemonUrl => {
-  const res = await fetch(pokemonUrl, { mode: 'no-cors' });
-  return await res.json();
-};
-
-const requestList = [...pokemonList];
-
-const getNextPokemon = async requestList => {
-  if (!requestList.length) {
-    return;
-  }
-
-  const currentPokemonList = requestList.slice(0, 3);
-
-  const pokemonToRender = await Promise.all(
-    currentPokemonList.map(url => getPokemon(url))
+const getPokemon2 = () =>
+  new Promise(resolve =>
+    setTimeout(() => {
+      fetch('https://pokeapi.co/api/v2/pokemon/8')
+        .then(res => res.json())
+        .then(resolve);
+    }, 3000)
   );
 
-  pokemonToRender.forEach(url => {
-    showPokemon(url);
-  });
+const getPokemon3 = () =>
+  fetch('https://pokeapi.co/api/v2/pokemon/22').then(res => res.json());
 
-  const nextReqList = requestList.slice(3);
-  getNextPokemon(nextReqList);
-};
+// const pokemonList = Promise.all([getPokemon1(), getPokemon2(), getPokemon3()])
+//   .then(res => {
+//     console.log(res);
 
-getNextPokemon(requestList);
+//     res.forEach(showPokemon);
+//   })
+//   .catch(err => console.log(err.message));
+
+(async () => {
+  const pokemonList = await Promise.all([
+    getPokemon1(),
+    getPokemon2(),
+    getPokemon3(),
+  ]);
+  pokemonList.forEach(showPokemon);
+})();
